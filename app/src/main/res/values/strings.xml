@@ -1,3 +1,61 @@
 <resources>
     <string name="app_name">Shark</string>
+    <!-- Titles-->
+    <string name="title_signup">Cadastro</string>
+    <string name="title_forgot">Recuperar Senha</string>
+    <string name="title_my_account">Sua conta</string>
+    <string name="title_historic">Histórico</string>
+    <string name="menu_settings">Configurações</string>
+    <string name="settings_infos">Alterar dados pessoais</string>
+    <string name="settings_password">Alterar senha</string>
+    <string name="title_payments_data">Alterar meios de pagamento</string>
+    <string name="title_financial">Financeiro</string>
+    <string name="title_add_balance">Adicionar saldo</string>
+    <string name="title_indications">Indicações</string>
+    <string name="menu_home">Tela inicial</string>
+    <string name="menu_logout">Sair</string>
+
+
+    <!-- Strings related to actions -->
+    <string name="action_confirm">Confirmar</string>
+    <string name="action_cancel">Cancelar</string>
+
+    <!-- Strings that may be change -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Strings related to validation -->
+    <string name="validation_no_password">Preencha a senha</string>
+    <string name="validation_invalid_password">Senha inválida. Sua senha deve ter no mínimo 6 dígitos.</string>
+    <string name="validation_no_name">Preencha um nome</string>
+    <string name="validation_no_cpf">Preencha seu CPF</string>
+    <string name="validation_format_cpf">Seu CPF deve estar no formato XXX.XXX.XXX-XX, totalizando 11 dígitos</string>
+    <string name="validation_invalid_cpf">Preencha com um CPF válido</string>
+    <string name="validation_no_phone">Preencha um telefone</string>
+    <string name="validation_invalid_phone">Seu telefone deve estar no formato (XX)  XXXXX-XXXX, totalizando 11 dígitos.</string>
+    <string name="validation_no_email">Preencha um email</string>
+    <string name="validation_invalid_email">Este e-mail não está correto. Preencha um email válido.</string>
+    <string name="validation_taken_email">Este e-mail já está cadastrado. Preencha outro e-mail.</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_name">Nome</string>
+    <string name="prompt_cpf">CPF</string>
+    <string name="prompt_phone">Telefone</string>
+    <string name="prompt_address">Endereço</string>
+    <string name="prompt_affiliate_code">Código de indicação (opicional)</string>
+    <string name="prompt_email">E-mail</string>
+    <string name="phone_hint">(99) 99999-9999</string>
+    <string name="prompt_password">Senha</string>
+    <string name="action_sign_in">Login</string>
+    <string name="action_sign_up">Cadastre-se</string>
+    <string name="action_forgot">Recuperar</string>
+    <string name="action_forgot_login">Esqueceu sua senha?</string>
+    <string name="invalid_username">E-mail inválido</string>
+    <string name="login_failed">"Login falhou"</string>
+    <string name="success_forgot">Email de recuperação de senha enviado com sucesso!</string>
+    <string name="prompt_cpf_cnpj">CPF</string>
+
+
+
+
 </resources>

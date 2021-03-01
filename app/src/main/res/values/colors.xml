@@ -1,10 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorSecondary">#019AE8</color> <!-- Secondary -1-->
+    <color name="colorBlueLight">#00A9FF</color> <!-- Secondary +1-->
+    <color name="colorPrimary">#185CAA</color>  <!-- Primary -1-->
+    <color name="colorAccent">#134D8E</color> <!-- Primary 0-->
+    <color name="colorRed">#EF5353</color> <!-- Danger -->
+    <color name="colorGreen">#29BC64</color> <!-- Success -->
+    <color name="colorPurple">#CDC1E7</color> <!-- Secondary 0 -->
+    <color name="colorYellow">#CDD23C</color> <!-- Secondary +1 -->
+    <color name="white">#fff</color>
+    <color name="colorGray">#727272</color>
+    <color name="grey">#d3d3d3</color>
+    <color name="colorHint">#C8C8C8</color> <!-- Light -->
+    <color name="colorHintBalance">#6F6F6F</color> <!-- Light -->
+    <color name="colorTextLight">#777777</color> <!-- Dark 2 -->
+    <color name="colorBlackLight">#535353</color> <!-- Dark -->
+    <color name="black">#000</color>
+
+    <color name="carbon_white">#ffffff</color>
+
+    <!-- Payments -->
+    <color name="colorPaymentText">#2E30E7</color> <!-- Payment text color -->
+    <color name="colorPaymentBackground">#E6F0FF</color> <!-- Payment background color -->
+
+    <!-- Dividers -->
+    <color name="colorDividerLight">#E0E0E0</color> <!-- Dark -->
+
+    <!-- Background -->
+    <color name="colorBackgroundBtn">#9C9C9C</color>
+    <color name="colorBackgroundLight">#FBFBFB</color>
+
+
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
 </resources>
