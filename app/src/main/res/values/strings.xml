@@ -14,11 +14,15 @@
     <string name="title_indications">Indicações</string>
     <string name="menu_home">Tela inicial</string>
     <string name="menu_logout">Sair</string>
-
-
+    <string name="prompt_total_fares">Total dos fretes</string>
+    <string name="prompt_total">Número de pedágios</string>
+    <string name="prompt_date">Data</string>
+    <string name="prompt_ordes">Pedágios</string>
+    <string name="prompt_value">Valor</string>
     <!-- Strings related to actions -->
     <string name="action_confirm">Confirmar</string>
     <string name="action_cancel">Cancelar</string>
+
 
     <!-- Strings that may be change -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -38,6 +42,7 @@
     <string name="validation_taken_email">Este e-mail já está cadastrado. Preencha outro e-mail.</string>
 
     <!-- Strings related to login -->
+    <string name="action_save">Salvar</string>
     <string name="prompt_name">Nome</string>
     <string name="prompt_cpf">CPF</string>
     <string name="prompt_phone">Telefone</string>
@@ -54,8 +59,8 @@
     <string name="login_failed">"Login falhou"</string>
     <string name="success_forgot">Email de recuperação de senha enviado com sucesso!</string>
     <string name="prompt_cpf_cnpj">CPF</string>
-
-
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

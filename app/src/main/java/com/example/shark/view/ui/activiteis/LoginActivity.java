@@ -1,7 +1,5 @@
 package com.example.shark.view.ui.activiteis;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -11,7 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.shark.R;
 import com.example.shark.services.Utils;
@@ -83,9 +82,9 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.btn_signup:
-//                blockButtons();
-//                Intent signupActivity = new Intent(getApplicationContext(), SignupActivity.class);
-//                startActivity(signupActivity);
+                blockButtons();
+                Intent signupActivity = new Intent(getApplicationContext(), SignupActivity.class);
+                startActivity(signupActivity);
                 break;
             case R.id.btn_forgot:
 //                blockButtons();
