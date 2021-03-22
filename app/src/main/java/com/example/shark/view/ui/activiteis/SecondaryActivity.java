@@ -38,8 +38,8 @@ public class SecondaryActivity extends BaseActivity {
 
         Intent intent = getIntent();
         Fragment fragment = null;
-//        (this.getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_close_white);
-//        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        (this.getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_close_white);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         switch (Objects.requireNonNull(getIntent().getIntExtra("id", 0))) {
             case R.id.nav_account:
@@ -53,9 +53,6 @@ public class SecondaryActivity extends BaseActivity {
                 break;
             case R.id.nav_financial:
 //                fragment = new FinancialFragment();
-                break;
-            case R.id.nav_affiliate:
-//                fragment = new AffiliateFragment();
                 break;
             default:
                 break;

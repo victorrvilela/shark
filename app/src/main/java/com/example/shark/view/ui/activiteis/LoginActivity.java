@@ -87,9 +87,9 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(signupActivity);
                 break;
             case R.id.btn_forgot:
-//                blockButtons();
-//                Intent forgotActivity = new Intent(getApplicationContext(), ForgotActivity.class);
-//                startActivity(forgotActivity);
+                blockButtons();
+                Intent forgotActivity = new Intent(getApplicationContext(), ForgotActivity.class);
+                startActivity(forgotActivity);
                 break;
         }
     }

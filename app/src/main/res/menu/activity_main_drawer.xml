@@ -27,12 +27,6 @@
             android:icon="@drawable/ic_financial"
             android:title="@string/title_financial" />
 
-
-        <item
-            android:id="@+id/nav_affiliate"
-            android:icon="@mipmap/ic_menu_affiliate"
-            android:title="@string/title_indications" />
-
         <item
             android:id="@+id/nav_logout"
             android:icon="@mipmap/ic_menu_logout"

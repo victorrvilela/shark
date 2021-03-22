@@ -11,10 +11,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".view.ui.activiteis.ForgotActivity"
+            android:label="@string/title_forgot"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
             android:name=".view.ui.activiteis.SignupActivity"
             android:label="@string/title_signup"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.ui.activiteis.SecondaryActivity"
             android:launchMode="singleTop"
