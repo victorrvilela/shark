@@ -9,6 +9,7 @@ import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.example.shark.view.ui.activiteis.LoginActivity;
+import com.parse.Parse;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
@@ -21,6 +22,15 @@ public class App extends Application implements LifecycleObserver {
     @Override
     public void onCreate() {
         super.onCreate();
+        Parse.initialize(new Parse.Configuration.Builder(this)
+                        .applicationId("shark")
+                        .clientKey("yourclientkey")
+                        .server("https://parse.serverurl.com.br/pg/")
+                        .enableLocalDataStore()
+                        .build()
+        );
+
+
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
         Intent mainActivity;
 

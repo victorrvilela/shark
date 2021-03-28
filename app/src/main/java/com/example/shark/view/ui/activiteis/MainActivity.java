@@ -88,7 +88,6 @@ public class MainActivity extends BaseActivity
         if (id == R.id.nav_logout) {
             this.logOut();
         } else  {
-            Log.d(Utils.TAG, "displaySelectedScreen: " + id);
             Intent intent = new Intent(getBaseContext(), SecondaryActivity.class);
             intent.putExtra("id", id);
             intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
