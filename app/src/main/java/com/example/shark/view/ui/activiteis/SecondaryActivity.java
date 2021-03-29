@@ -14,6 +14,7 @@ import com.example.shark.R;
 import com.example.shark.view.ui.BaseActivity;
 import com.example.shark.view.ui.fragments.AccountFragment;
 import com.example.shark.view.ui.fragments.HistoricFragment;
+import com.example.shark.view.ui.fragments.SettingsFragment;
 
 import java.util.Objects;
 
@@ -51,7 +52,7 @@ public class SecondaryActivity extends BaseActivity {
                 fragment = new HistoricFragment();
                 break;
             case R.id.nav_settings:
-//                fragment = new SettingsFragment();
+                fragment = new SettingsFragment();
                 break;
             case R.id.nav_financial:
 //                fragment = new FinancialFragment();

@@ -17,7 +17,6 @@
     <dimen name="border_round_details">11dp</dimen>
 
 
-
     <dimen name="bottom_sheet_padding">28dp</dimen>
     <dimen name="custom_button_height">50dp</dimen>
     <dimen name="border_round_button">25dp</dimen>
