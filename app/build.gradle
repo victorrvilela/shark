@@ -46,9 +46,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-process:2.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "com.github.parse-community.Parse-SDK-Android:parse:1.24.2"
-    // for FCM Push support (optional)
     implementation "com.github.parse-community.Parse-SDK-Android:fcm:1.20.0"
-    // for Kotlin extensions support (optional)
     implementation "com.github.parse-community.Parse-SDK-Android:ktx:1.20.0"
     implementation 'com.github.parse-community:ParseLiveQuery-Android:1.2.2'
     implementation 'com.github.santalu:mask-edittext:1.1.1'

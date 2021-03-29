@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -75,9 +76,22 @@ public class LoginActivity extends AppCompatActivity {
                 loading.setVisibility(View.VISIBLE);
                 if (Validation.isValidEmail(this, username.getText().toString()) &&
                         Validation.isValidPassword(this, password.getText().toString())) {
-                    loading.setVisibility(View.GONE);
-                    logged();
-                    enableButtons();
+                    ParseQuery<ParseObject> parseUsers = ParseQuery.getQuery("Users");
+                    parseUsers.whereEqualTo("email", username.getText().toString());
+                    parseUsers.whereEqualTo("password", password.getText().toString());
+                    parseUsers.fromLocalDatastore();
+                    parseUsers.findInBackground((objects, e) -> {
+                        if (e == null) {
+                            if (objects.size() == 1) {
+                                loading.setVisibility(View.GONE);
+                                logged();
+                            } else {
+                                Toast.makeText(this, "Usuário ou senha incorreta!", Toast.LENGTH_LONG).show();
+                                loading.setVisibility(View.GONE);
+                            }
+                            enableButtons();
+                        }
+                    });
                 } else {
                     loading.setVisibility(View.GONE);
                     enableButtons();

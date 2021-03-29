@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import com.example.shark.R;
 import com.example.shark.services.Utils;
 import com.example.shark.services.Validation;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.santalu.maskedittext.MaskEditText;
 
 import butterknife.BindView;
@@ -114,12 +116,26 @@ public class SignupActivity extends AppCompatActivity implements AdapterView.OnI
                 Validation.isValidPassword(activity, password.getText().toString()) &&
                 Validation.isValidPhoneNumber(activity, phone.getRawText()) &&
                 Validation.isValidPlate(activity, plate.getRawText())) {
-            objectDelivery.pinInBackground(e -> {
+            ParseQuery<ParseObject> parseUsers = ParseQuery.getQuery("Users");
+            parseUsers.whereEqualTo("email", username.getText().toString());
+            parseUsers.fromLocalDatastore();
+            parseUsers.findInBackground((objects, e) -> {
                 if (e == null) {
-                    loading.setVisibility(View.GONE);
-                    logged();
+                    if (objects.size() == 1) {
+                        loading.setVisibility(View.GONE);
+                        Toast.makeText(this, "Email já cadastrado!", Toast.LENGTH_LONG).show();
+                    } else {
+                        objectDelivery.pinInBackground(e1 -> {
+                            if (e1 == null) {
+                                loading.setVisibility(View.GONE);
+                                logged();
+                            }
+                        });
+                        loading.setVisibility(View.GONE);
+                    }
                 }
             });
+
         }
         loading.setVisibility(View.GONE);
 
