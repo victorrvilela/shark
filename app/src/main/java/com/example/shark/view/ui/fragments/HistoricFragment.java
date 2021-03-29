@@ -64,22 +64,7 @@ public class HistoricFragment extends BaseFragment {
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
 //        clearLocal();
-        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Pedagios");
-        parseQuery.fromLocalDatastore();
-        parseQuery.findInBackground((objects, e) -> {
-            if (e == null) {
-                if (objects.size() == 0) {
-                    createLocalData("CTH-4546", "11/07", "Sertãozinho", 13.45);
-                    createLocalData("CTH-4546", "11/07", "Sertãozinho", 13.45);
-                    createLocalData("CTH-4546", "14/07", "São Paulo", 7.31);
-                    createLocalData("CTH-4546", "16/07", "Ouro Preto", 11.00);
-                    createLocalData("CTH-4546", "16/07", "Ouro Preto", 11.00);
-                    createLocalData("CTH-4546", "28/07", "Mariana", 6.34);
-                    createLocalData("CTH-4546", "29/07", "Mariana", 6.34);
-                    parseQuery();
-                }
-            }
-        });
+        parseQuery();
         return view;
     }
 
@@ -102,14 +87,6 @@ public class HistoricFragment extends BaseFragment {
         });
     }
 
-    private void createLocalData(String plate, String date, String city, Double price) {
-        ParseObject objectDelivery = new ParseObject("Pedagios");
-        objectDelivery.put("plate", plate);
-        objectDelivery.put("date", date);
-        objectDelivery.put("city", city);
-        objectDelivery.put("price", price);
-        objectDelivery.pinInBackground();
-    }
 
     private void setupRecycler(List<ParseObject> list) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());

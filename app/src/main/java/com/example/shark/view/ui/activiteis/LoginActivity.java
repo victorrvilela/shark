@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.shark.R;
 import com.example.shark.services.Utils;
 import com.example.shark.services.Validation;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -123,7 +125,78 @@ public class LoginActivity extends AppCompatActivity {
         mainActivity.addFlags(FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         mainActivity.setAction(Intent.ACTION_MAIN);
         mainActivity.addCategory(Intent.CATEGORY_HOME);
+        populateLocalData();
         finish();
         startActivity(mainActivity);
+    }
+
+    private void populateLocalData() {
+        ParseQuery<ParseObject> parsePedagios = ParseQuery.getQuery("Pedagios");
+        parsePedagios.fromLocalDatastore();
+        parsePedagios.findInBackground((objects, e) -> {
+            if (e == null) {
+                if (objects.size() == 0) {
+                    createLocalPedagios("CTH-4546", "11/07", "Sertãozinho", 13.45);
+                    createLocalPedagios("CTH-4546", "11/07", "Sertãozinho", 13.45);
+                    createLocalPedagios("CTH-4546", "14/07", "São Paulo", 7.31);
+                    createLocalPedagios("CTH-4546", "16/07", "Ouro Preto", 11.00);
+                    createLocalPedagios("CTH-4546", "16/07", "Ouro Preto", 11.00);
+                    createLocalPedagios("CTH-4546", "28/07", "Mariana", 6.34);
+                    createLocalPedagios("CTH-4546", "29/07", "Mariana", 6.34);
+                }
+            }
+        });
+
+        ParseQuery<ParseObject> parsePayments = ParseQuery.getQuery("Payments");
+        parsePayments.fromLocalDatastore();
+        parsePayments.findInBackground((objects, e) -> {
+            if (e == null) {
+                if (objects.size() == 0) {
+                    createLocalPayments(30, 50);
+                    createLocalPayments(100, 120);
+                    createLocalPayments(150, 200);
+                    createLocalPayments(800, 1000);
+                }
+            }
+        });
+
+        ParseQuery<ParseObject> parseCashBook = ParseQuery.getQuery("CashBook");
+        parseCashBook.fromLocalDatastore();
+        parseCashBook.findInBackground((objects, e) -> {
+            if (e == null) {
+                if (objects.size() == 0) {
+                    createLocalCashBook("19/11/2020", 1, -13.56);
+                    createLocalCashBook("19/11/2020", 2, -4.87);
+                    createLocalCashBook("19/11/2020", 2, -4.87);
+                    createLocalCashBook("21/11/2020", 3, 29);
+                    createLocalCashBook("27/11/2020", 1, -4.87);
+                    createLocalCashBook("27/11/2020", 1, -4.87);
+                }
+            }
+        });
+    }
+
+    private void createLocalPedagios(String plate, String date, String city, Double price) {
+        ParseObject objectDelivery = new ParseObject("Pedagios");
+        objectDelivery.put("plate", plate);
+        objectDelivery.put("date", date);
+        objectDelivery.put("city", city);
+        objectDelivery.put("price", price);
+        objectDelivery.pinInBackground();
+    }
+
+    private void createLocalCashBook(String date, int type, double price) {
+        ParseObject objectDelivery = new ParseObject("CashBook");
+        objectDelivery.put("date", date);
+        objectDelivery.put("type", type);
+        objectDelivery.put("value", price);
+        objectDelivery.pinInBackground();
+    }
+
+    private void createLocalPayments(int price, double value) {
+        ParseObject objectDelivery = new ParseObject("Payments");
+        objectDelivery.put("price", price);
+        objectDelivery.put("value", value);
+        objectDelivery.pinInBackground();
     }
 }

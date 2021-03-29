@@ -18,6 +18,9 @@ import com.example.shark.view.ui.BaseActivity;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -45,22 +48,7 @@ public class AddBalanceActivity extends BaseActivity {
         Utils.setupUI(this, findViewById(R.id.add_balance));
         ButterKnife.bind(this);
         this.setTitle(getResources().getString(R.string.title_add_balance));
-
-        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Payments");
-        parseQuery.fromLocalDatastore();
-        parseQuery.findInBackground((objects, e) -> {
-            if (e == null) {
-                if (objects.size() == 0) {
-                    createLocalData(30, 50);
-                    createLocalData(100, 120);
-                    createLocalData(150, 200);
-                    createLocalData(800, 1000);
-                    parseQuery();
-                }
-            }
-        });
-
-
+        parseQuery();
         currentActivity = this;
     }
 
@@ -80,12 +68,6 @@ public class AddBalanceActivity extends BaseActivity {
         return R.layout.activity_add_balance;
     }
 
-    private void createLocalData(int price, double value) {
-        ParseObject objectDelivery = new ParseObject("Payments");
-        objectDelivery.put("price", price);
-        objectDelivery.put("value", value);
-        objectDelivery.pinInBackground();
-    }
 
     private void setupRecycler(List<ParseObject> list) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -101,7 +83,7 @@ public class AddBalanceActivity extends BaseActivity {
                             AlertDialog.Builder alert = new AlertDialog.Builder(currentActivity);
                             alert.setMessage(String.format("%s \"%s\"", "Foi enviado um boleto para seu e-mail", "shark.tester@shark.com.br"))
                                     .setPositiveButton("Ok", (dialog2, id2) -> {
-                                        addBalance();
+                                        addBalance(new Date(), list.get(position).getDouble("value"),3 );
                                     }).show();
                         })
                         .setNegativeButton(getResources().getString(R.string.action_cancel), (dialog, id) -> {
@@ -132,7 +114,19 @@ public class AddBalanceActivity extends BaseActivity {
         return true;
     }
 
-    private void addBalance() {
-        finish();
+    private void addBalance(Date date, double value, int type) {
+        String pattern = "dd/MM/yyyy";
+        DateFormat df = new SimpleDateFormat(pattern);
+        String todayAsString = df.format(date);
+        ParseObject objectDelivery = new ParseObject("CashBook");
+        objectDelivery.put("date", todayAsString);
+        objectDelivery.put("type", type);
+        objectDelivery.put("value", value);
+        objectDelivery.pinInBackground(e -> {
+            if( e == null ) {
+                finish();
+            }
+        });
+
     }
 }

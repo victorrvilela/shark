@@ -83,14 +83,18 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ButterKnife.bind(this);
 
+
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        ButterKnife.bind(this);
         checkPermission();
         setSupportActionBar(toolbar);
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         Utils.setupUI(MainActivity.this, drawerLayout);
         navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
@@ -101,18 +105,17 @@ public class MainActivity extends BaseActivity
             ft.replace(R.id.rootFrame, new HomeFragment());
             ft.commitAllowingStateLoss();
         }
-    }
 
+    }
 
     public void centerCameraToPosition(double lat, double lng) {
         LatLng latLng = new LatLng(lat, lng);
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(latLng)
-                .zoom(13)
+                .zoom(17)
                 .build();
 
         MapFragment.mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
     }
 
     private boolean checkPermission() {
@@ -133,7 +136,6 @@ public class MainActivity extends BaseActivity
     protected int getLayoutResourceId() {
         return R.layout.activity_main;
     }
-
 
 
     @Override

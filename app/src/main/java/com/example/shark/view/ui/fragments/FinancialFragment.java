@@ -63,28 +63,14 @@ public class FinancialFragment extends BaseFragment {
         setHasOptionsMenu(true);
 
         llLoading.setVisibility(View.VISIBLE);
-        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("CashBook");
-        parseQuery.fromLocalDatastore();
-        parseQuery.findInBackground((objects, e) -> {
-            if (e == null) {
-                if (objects.size() == 0) {
-                    createLocalData("19/11/2020", 1, -13.56);
-                    createLocalData("19/11/2020", 2, -4.87);
-                    createLocalData("19/11/2020", 2, -4.87);
-                    createLocalData("21/11/2020", 3, 29);
-                    createLocalData("27/11/2020", 1, -4.87);
-                    createLocalData("27/11/2020", 1, -4.87);
-                    parseQuery();
-                }
-            }
-        });
-
+        parseQuery();
         return view;
     }
 
     private void parseQuery() {
         ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("CashBook");
         parseQuery.fromLocalDatastore();
+        parseQuery.addDescendingOrder("date");
         parseQuery.findInBackground((objects, e) -> {
             if (e == null) {
                 int balance = 0;
@@ -97,14 +83,6 @@ public class FinancialFragment extends BaseFragment {
 
             }
         });
-    }
-
-    private void createLocalData(String date, int type, double price) {
-        ParseObject objectDelivery = new ParseObject("CashBook");
-        objectDelivery.put("date", date);
-        objectDelivery.put("type", type);
-        objectDelivery.put("value", price);
-        objectDelivery.pinInBackground();
     }
 
     @Override
@@ -126,5 +104,9 @@ public class FinancialFragment extends BaseFragment {
         recyclerView.setAdapter(mAdapter);
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        parseQuery();
+    }
 }
