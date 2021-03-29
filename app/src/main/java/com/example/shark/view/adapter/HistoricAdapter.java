@@ -14,7 +14,6 @@ import com.parse.ParseObject;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Objects;
 
 public class HistoricAdapter extends RecyclerView.Adapter<HistoricLineHolder> {
 
@@ -40,7 +39,7 @@ public class HistoricAdapter extends RecyclerView.Adapter<HistoricLineHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull HistoricLineHolder holder, int position) {
-        holder.deliveryDate.setText(String.format("%s", format.format(Objects.requireNonNull(mHistoric.get(position).getDate("createdAt")))));
+        holder.deliveryDate.setText(String.format("%s", mHistoric.get(position).getString("date")));
         holder.deliveryPlate.setText(String.format("%s", mHistoric.get(position).getString("plate")));
         holder.deliveryCity.setText(String.format("%s", mHistoric.get(position).getString("city")));
         holder.deliveryPrice.setText(String.format("%s", Utils.formatCurrency(mHistoric.get(position).getDouble("price"))));

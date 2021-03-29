@@ -67,45 +67,39 @@ public class FinancialFragment extends BaseFragment {
         parseQuery.fromLocalDatastore();
         parseQuery.findInBackground((objects, e) -> {
             if (e == null) {
-                if (objects.size() > 0) {
-                    int balance = 0;
-                    for (int i = 0; i < objects.size(); i++) {
-                        balance += objects.get(i).getDouble("value");
-                    }
-                    accountBalance.setText(String.format("%s", Utils.formatCurrency(balance)));
-                    setupRecycler(objects, currentActivity);
-                    llLoading.setVisibility(View.GONE);
-                } else {
+                if (objects.size() == 0) {
                     createLocalData("19/11/2020", 1, -13.56);
                     createLocalData("19/11/2020", 2, -4.87);
                     createLocalData("19/11/2020", 2, -4.87);
                     createLocalData("21/11/2020", 3, 29);
                     createLocalData("27/11/2020", 1, -4.87);
                     createLocalData("27/11/2020", 1, -4.87);
-                    ParseQuery<ParseObject> secondQuery = ParseQuery.getQuery("CashBook");
-                    secondQuery.fromLocalDatastore();
-                    secondQuery.findInBackground((list, e1) -> {
-                        if (e1 == null) {
-                            if (list.size() > 0) {
-                                int balance = 0;
-                                for (int i = 0; i < list.size(); i++) {
-                                    balance += list.get(i).getInt("value");
-                                }
-                                accountBalance.setText(String.format("%s", Utils.formatCurrency(balance)));
-                                setupRecycler(list, currentActivity);
-                                llLoading.setVisibility(View.GONE);
-                            }
-                        }
-                    });
+                    parseQuery();
                 }
             }
         });
 
-
         return view;
     }
 
-    private void createLocalData(String date, int type, double price){
+    private void parseQuery() {
+        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("CashBook");
+        parseQuery.fromLocalDatastore();
+        parseQuery.findInBackground((objects, e) -> {
+            if (e == null) {
+                int balance = 0;
+                for (int i = 0; i < objects.size(); i++) {
+                    balance += objects.get(i).getDouble("value");
+                }
+                accountBalance.setText(String.format("%s", Utils.formatCurrency(balance)));
+                setupRecycler(objects, currentActivity);
+                llLoading.setVisibility(View.GONE);
+
+            }
+        });
+    }
+
+    private void createLocalData(String date, int type, double price) {
         ParseObject objectDelivery = new ParseObject("CashBook");
         objectDelivery.put("date", date);
         objectDelivery.put("type", type);

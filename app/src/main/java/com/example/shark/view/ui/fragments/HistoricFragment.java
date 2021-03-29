@@ -2,9 +2,6 @@ package com.example.shark.view.ui.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -25,7 +22,6 @@ import com.parse.ParseQuery;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -67,8 +63,23 @@ public class HistoricFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_historic, container, false);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
-
-        parseQuery();
+//        clearLocal();
+        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Pedagios");
+        parseQuery.fromLocalDatastore();
+        parseQuery.findInBackground((objects, e) -> {
+            if (e == null) {
+                if (objects.size() == 0) {
+                    createLocalData("CTH-4546", "11/07", "Sertãozinho", 13.45);
+                    createLocalData("CTH-4546", "11/07", "Sertãozinho", 13.45);
+                    createLocalData("CTH-4546", "14/07", "São Paulo", 7.31);
+                    createLocalData("CTH-4546", "16/07", "Ouro Preto", 11.00);
+                    createLocalData("CTH-4546", "16/07", "Ouro Preto", 11.00);
+                    createLocalData("CTH-4546", "28/07", "Mariana", 6.34);
+                    createLocalData("CTH-4546", "29/07", "Mariana", 6.34);
+                    parseQuery();
+                }
+            }
+        });
         return view;
     }
 
@@ -76,27 +87,12 @@ public class HistoricFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         currentActivity.setTitle(R.string.title_historic);
-        setHasOptionsMenu(true);
 
 
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.mymenu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.mybutton) {
-            saveHistoric();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void clearLocal(){
+    private void clearLocal() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Pedagios");
         query.fromLocalDatastore().findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -106,12 +102,12 @@ public class HistoricFragment extends BaseFragment {
         });
     }
 
-    private void saveHistoric(){
+    private void createLocalData(String plate, String date, String city, Double price) {
         ParseObject objectDelivery = new ParseObject("Pedagios");
-        objectDelivery.put("plate", "BTF-3013");
-        objectDelivery.put("createdAt", new Date());
-        objectDelivery.put("city", "Sertãozinho");
-        objectDelivery.put("price", 3);
+        objectDelivery.put("plate", plate);
+        objectDelivery.put("date", date);
+        objectDelivery.put("city", city);
+        objectDelivery.put("price", price);
         objectDelivery.pinInBackground();
     }
 
@@ -128,21 +124,15 @@ public class HistoricFragment extends BaseFragment {
         deliveries_total_value = 0;
         ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Pedagios");
         parseQuery.fromLocalDatastore();
-        llLoading.setVisibility(View.VISIBLE);
         parseQuery.findInBackground((objects, e) -> {
             if (e == null) {
-                if (objects.size() > 0) {
-                    deliveries_number = objects.size();
-                    for (int i = 0; i < deliveries_number; i++) {
-                        deliveries_total_value = deliveries_total_value + (objects.get(i).getDouble("price"));
-                    }
-                    deliveries.setText(String.format("%s", deliveries_number));
-                    freight.setText(String.format("%s", Utils.formatCurrency(deliveries_total_value)));
-                    setupRecycler(objects);
-                } else {
-                    deliveries.setText(String.format("%s", 0));
-                    freight.setText(String.format("%s", Utils.formatCurrency(0)));
+                deliveries_number = objects.size();
+                for (int i = 0; i < deliveries_number; i++) {
+                    deliveries_total_value = deliveries_total_value + (objects.get(i).getDouble("price"));
                 }
+                deliveries.setText(String.format("%s", deliveries_number));
+                freight.setText(String.format("%s", Utils.formatCurrency(deliveries_total_value)));
+                setupRecycler(objects);
             }
         });
     }

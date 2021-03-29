@@ -50,29 +50,29 @@ public class AddBalanceActivity extends BaseActivity {
         parseQuery.fromLocalDatastore();
         parseQuery.findInBackground((objects, e) -> {
             if (e == null) {
-                if (objects.size() > 0) {
-                    setupRecycler(objects);
-                    llLoading.setVisibility(View.GONE);
-                } else {
+                if (objects.size() == 0) {
                     createLocalData(30, 50);
                     createLocalData(100, 120);
                     createLocalData(150, 200);
                     createLocalData(800, 1000);
-                    ParseQuery<ParseObject> secondQuery = ParseQuery.getQuery("Payments");
-                    secondQuery.fromLocalDatastore();
-                    secondQuery.findInBackground((list, e1) -> {
-                        if (e1 == null) {
-                            if (list.size() > 0) {
-                                setupRecycler(list);
-                                llLoading.setVisibility(View.GONE);
-                            }
-                        }
-                    });
+                    parseQuery();
                 }
             }
         });
 
+
         currentActivity = this;
+    }
+
+    private void parseQuery() {
+        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Payments");
+        parseQuery.fromLocalDatastore();
+        parseQuery.findInBackground((objects, e) -> {
+            if (e == null) {
+                setupRecycler(objects);
+                llLoading.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
@@ -80,7 +80,7 @@ public class AddBalanceActivity extends BaseActivity {
         return R.layout.activity_add_balance;
     }
 
-    private void createLocalData( int price, double value){
+    private void createLocalData(int price, double value) {
         ParseObject objectDelivery = new ParseObject("Payments");
         objectDelivery.put("price", price);
         objectDelivery.put("value", value);
