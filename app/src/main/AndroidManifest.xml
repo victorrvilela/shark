@@ -19,11 +19,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".view.ui.activiteis.AddBalanceActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".view.ui.activiteis.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".view.ui.activiteis.SettingsPasswordActivity"
             android:label="@string/title_activity_settings_password"
             android:launchMode="singleTop"
             android:parentActivityName=".view.ui.activiteis.MainActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".services.ImagePickerActivity"
             android:launchMode="singleTop"

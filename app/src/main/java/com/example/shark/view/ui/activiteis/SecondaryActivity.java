@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.shark.R;
 import com.example.shark.view.ui.BaseActivity;
 import com.example.shark.view.ui.fragments.AccountFragment;
+import com.example.shark.view.ui.fragments.FinancialFragment;
 import com.example.shark.view.ui.fragments.HistoricFragment;
 import com.example.shark.view.ui.fragments.SettingsFragment;
 
@@ -55,7 +56,7 @@ public class SecondaryActivity extends BaseActivity {
                 fragment = new SettingsFragment();
                 break;
             case R.id.nav_financial:
-//                fragment = new FinancialFragment();
+                fragment = new FinancialFragment();
                 break;
             default:
                 break;
