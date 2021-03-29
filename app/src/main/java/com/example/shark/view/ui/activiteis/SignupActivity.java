@@ -3,7 +3,6 @@ package com.example.shark.view.ui.activiteis;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,6 +17,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import com.example.shark.R;
 import com.example.shark.services.Utils;
 import com.example.shark.services.Validation;
+import com.parse.ParseObject;
 import com.santalu.maskedittext.MaskEditText;
 
 import butterknife.BindView;
@@ -43,6 +43,8 @@ public class SignupActivity extends AppCompatActivity implements AdapterView.OnI
     MaskEditText phone;
     @BindView(R.id.CPF)
     MaskEditText cpf;
+    @BindView(R.id.plate)
+    MaskEditText plate;
     @BindView(R.id.btn_submit_sign)
     AppCompatButton btnSubmitSign;
     @BindView(R.id.container)
@@ -57,7 +59,6 @@ public class SignupActivity extends AppCompatActivity implements AdapterView.OnI
         ButterKnife.bind(this);
 
         ActionBar actionBar = this.getSupportActionBar();
-        Log.d(Utils.TAG, "onCreate: "+ actionBar);
         if (actionBar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -98,15 +99,30 @@ public class SignupActivity extends AppCompatActivity implements AdapterView.OnI
 
     @OnClick(R.id.btn_submit_sign)
     public void onBtnSubmitSignClicked() {
+        ParseObject objectDelivery = new ParseObject("Users");
+        objectDelivery.put("name", name.getText().toString());
+        objectDelivery.put("cpf", cpf.getRawText());
+        objectDelivery.put("email", username.getText().toString());
+        objectDelivery.put("password", password.getText().toString());
+        objectDelivery.put("phone", phone.getRawText());
+        objectDelivery.put("plate", plate.getRawText());
+
+        loading.setVisibility(View.VISIBLE); //to show
         if (Validation.isValidUserName(activity, name.getText().toString()) &&
                 Validation.isValidCPF(activity, cpf.getRawText()) &&
                 Validation.isValidEmail(activity, username.getText().toString()) &&
                 Validation.isValidPassword(activity, password.getText().toString()) &&
-                Validation.isValidPhoneNumber(activity, phone.getRawText())) {
-            loading.setVisibility(View.VISIBLE); //to show
-                loading.setVisibility(View.GONE); // to hide
-                logged();
-            }
+                Validation.isValidPhoneNumber(activity, phone.getRawText()) &&
+                Validation.isValidPlate(activity, plate.getRawText())) {
+            objectDelivery.pinInBackground(e -> {
+                if (e == null) {
+                    loading.setVisibility(View.GONE);
+                    logged();
+                }
+            });
         }
+        loading.setVisibility(View.GONE);
 
     }
+
+}

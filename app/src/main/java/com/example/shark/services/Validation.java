@@ -15,8 +15,7 @@ public class Validation {
     public final static String TAG = "Shark";
     private static Pattern PATTERN_GENERIC = Pattern.compile("[0-9]{3}\\.?[0-9]{3}\\.?[0-9]{3}\\-?[0-9]{2}");
     private static Pattern PATTERN_NUMBERS = Pattern.compile("(?=^((?!((([0]{11})|([1]{11})|([2]{11})|([3]{11})|([4]{11})|([5]{11})|([6]{11})|([7]{11})|([8]{11})|([9]{11})))).)*$)([0-9]{11})");
-
-
+    private static Pattern PATTERN_PLATE = Pattern.compile("(^[a-zA-Z]{3}[0-9][A-Za-z0-9][0-9]{2}$)");
 
 
     // validating password with retype password
@@ -84,6 +83,29 @@ public class Validation {
         }
         if (!PATTERN_GENERIC.matcher(cpf).matches()) {
             Toast.makeText(context, context.getResources().getString(R.string.validation_format_cpf), Toast.LENGTH_LONG).show();
+            return false;
+        }
+        Toast.makeText(context, context.getResources().getString(R.string.validation_invalid_cpf), Toast.LENGTH_LONG).show();
+        return false;
+    }
+
+    public static boolean isValidPlate(Activity context, String plate) {
+        if (plate != null && PATTERN_PLATE.matcher(plate).matches()) {
+            plate = plate.replaceAll("-|\\.", "");
+            if (PATTERN_PLATE.matcher(plate).matches()) {
+                return true;
+            }
+            Toast.makeText(context, "Digite uma placa válida", Toast.LENGTH_LONG).show();
+            return false;
+
+        }
+
+        if (plate == null || plate.isEmpty()) {
+            Toast.makeText(context, "Preencha sua placa do carro", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (!PATTERN_PLATE.matcher(plate).matches()) {
+            Toast.makeText(context, "Sua placa deve estar no formato XXX-XXXX", Toast.LENGTH_LONG).show();
             return false;
         }
         Toast.makeText(context, context.getResources().getString(R.string.validation_invalid_cpf), Toast.LENGTH_LONG).show();

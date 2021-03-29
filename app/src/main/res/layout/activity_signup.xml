@@ -92,6 +92,21 @@
             app:layout_constraintTop_toBottomOf="@+id/password"
             app:met_mask="(##) #####-####" />
 
+        <com.santalu.maskedittext.MaskEditText
+            android:id="@+id/plate"
+            style="@style/FormEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorTextLight"
+            android:hint="Placa do carro"
+            android:imeActionLabel="Placa do carro"
+            android:imeOptions="actionNext"
+            android:textColorHint="@color/colorTextLight"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:met_mask="###-####" />
+
     </LinearLayout>
 
 
