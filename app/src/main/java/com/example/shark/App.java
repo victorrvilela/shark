@@ -9,6 +9,7 @@ import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.example.shark.view.ui.activiteis.LoginActivity;
+import com.google.android.libraries.places.api.Places;
 import com.parse.Parse;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
@@ -41,6 +42,10 @@ public class App extends Application implements LifecycleObserver {
         mainActivity.addCategory(Intent.CATEGORY_HOME);
         startActivity(mainActivity);
 
+
+        if(!Places.isInitialized()){
+            Places.initialize(getApplicationContext(), "AIzaSyA-599I-n7mK2Iy_2Z1vhipDmBaFWfACYs");
+        }
     }
 
     //
