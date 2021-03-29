@@ -44,7 +44,6 @@ public class App extends Application implements LifecycleObserver {
 
 
         if(!Places.isInitialized()){
-            Places.initialize(getApplicationContext(), "AIzaSyA-599I-n7mK2Iy_2Z1vhipDmBaFWfACYs");
         }
     }
 
