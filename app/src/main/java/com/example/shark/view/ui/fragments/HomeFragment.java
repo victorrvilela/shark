@@ -54,14 +54,9 @@ public class HomeFragment extends MapFragment {
 
     @Override
     public void onResume() {
-        createMarkers();
         super.onResume();
 
     }
 
-
-    private void createMarkers() {
-        mapClear();
-    }
 
 }

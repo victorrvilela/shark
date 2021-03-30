@@ -62,8 +62,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
         //TODO retirar conta
-        username.setText("tester.shark@shark.com.br");
-        password.setText("shark123");
+        username.setText("diego@hotmail.com");
+        password.setText("dev123");
     }
 
     @OnClick({R.id.btn_submit, R.id.btn_signup, R.id.btn_forgot})
@@ -124,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
+//        finish();
     }
 
     @Override

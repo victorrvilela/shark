@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -101,6 +102,8 @@ public class MainActivity extends BaseActivity
         toggle.syncState();
 
         if (!isFinishing()) {
+            Log.d(Utils.TAG, "teste: 2");
+
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.rootFrame, new HomeFragment());
             ft.commitAllowingStateLoss();
@@ -226,6 +229,7 @@ public class MainActivity extends BaseActivity
 
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (!isFinishing()) {
+                        Log.d(Utils.TAG, "teste: 1");
                         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                         ft.replace(R.id.rootFrame, new HomeFragment());
                         ft.commitAllowingStateLoss();
