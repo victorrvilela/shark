@@ -208,6 +208,33 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_plate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_cpf">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Placa do carro">
+
+                    <com.santalu.maskedittext.MaskEditText
+                        android:id="@+id/plate_account"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeActionLabel="Placa do carro"
+                        android:paddingTop="2dp"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        app:met_mask="###-####" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

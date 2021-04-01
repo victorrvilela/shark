@@ -2,13 +2,15 @@ package com.example.shark.view.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.shark.services.Utils;
 import com.example.shark.view.ui.activiteis.LoginActivity;
+import com.parse.FindCallback;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
+import java.util.List;
 import java.util.Locale;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
@@ -27,7 +29,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract int getLayoutResourceId();
 
     public void logOut() {
-        Log.d(Utils.TAG, "logOut: ");
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Login");
+        query.fromLocalDatastore().findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, com.parse.ParseException e) {
+                ParseObject.unpinAllInBackground(objects);
+            }
+        });
         finish();
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP | FLAG_ACTIVITY_NEW_TASK);

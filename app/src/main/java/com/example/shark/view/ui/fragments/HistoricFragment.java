@@ -100,7 +100,7 @@ public class HistoricFragment extends BaseFragment {
     private void parseQuery() {
         deliveries_total_value = 0;
         ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Pedagios");
-        parseQuery.addDescendingOrder("date");
+        parseQuery.addAscendingOrder("date");
         parseQuery.fromLocalDatastore();
         parseQuery.findInBackground((objects, e) -> {
             if (e == null) {
