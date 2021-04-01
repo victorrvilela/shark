@@ -39,7 +39,7 @@
         app:layout_constraintRight_toRightOf="parent">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_submit"
+            android:id="@+id/submit"
             style="@style/FullButton"
             android:layout_width="match_parent"
             android:layout_height="@dimen/custom_button_height"

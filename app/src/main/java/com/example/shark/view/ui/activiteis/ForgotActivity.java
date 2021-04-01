@@ -2,6 +2,7 @@ package com.example.shark.view.ui.activiteis;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
@@ -12,6 +13,8 @@ import com.example.shark.R;
 import com.example.shark.services.Utils;
 import com.example.shark.services.Validation;
 import com.example.shark.view.ui.BaseActivity;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,13 +25,12 @@ public class ForgotActivity extends BaseActivity {
 
     @BindView(R.id.username)
     EditText username;
-
     @BindView(R.id.loading)
     ProgressBar loading;
     @BindView(R.id.forgot)
     ConstraintLayout forgot;
-    @BindView(R.id.btn_submit)
-    AppCompatButton btnSubmit;
+    @BindView(R.id.submit)
+    AppCompatButton submit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +55,21 @@ public class ForgotActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick(R.id.btn_submit)
-    public void onViewClicked() {
+    @OnClick(R.id.submit)
+    public void onSubmitClicked() {
         if (Validation.isValidEmail(this, username.getText().toString())) {
-            finish();
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("Users");
+            query.fromLocalDatastore();
+            query.whereEqualTo("email", username.getText().toString());
+            query.getFirstInBackground((object, e1) -> {
+                loading.setVisibility(View.GONE);
+                if (e1 == null && object != null) {
+                    Utils.showToaster(this, getString(R.string.success_forgot));
+                    finish();
+                } else {
+                    Utils.showToaster(this, this.getResources().getString(R.string.invalid_username));
+                }
+            });
         }
     }
 }

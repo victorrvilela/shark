@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -31,6 +32,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.navigation.NavigationView;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,6 +55,8 @@ public class MainActivity extends BaseActivity
     float currentLatitude = 0;
     float currentLongitude = 0;
     String currentProvider = "";
+
+
     LocationListener locationListenerGPS = new LocationListener() {
         @Override
         public void onLocationChanged(android.location.Location location) {
@@ -59,7 +64,7 @@ public class MainActivity extends BaseActivity
             currentLatitude = (float) location.getLatitude();
             currentLongitude = (float) location.getLongitude();
             currentProvider = location.getProvider();
-            centerCameraToPosition(currentLatitude, currentLongitude);
+
         }
 
         @Override
@@ -100,13 +105,27 @@ public class MainActivity extends BaseActivity
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        if (!isFinishing()) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.rootFrame, new HomeFragment());
-            ft.commitAllowingStateLoss();
-        }
+        logIn();
 
     }
+
+    private void logIn(){
+
+        ParseQuery<ParseObject> parseUsers = ParseQuery.getQuery("Login");
+        parseUsers.fromLocalDatastore();
+        parseUsers.findInBackground((objects, e) -> {
+            if (e == null) {
+                if (objects.size() == 1) {
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.rootFrame, new HomeFragment());
+                    ft.commitAllowingStateLoss();
+                } else {
+                    logOut();
+                }
+            }
+        });
+    }
+
 
     public void centerCameraToPosition(double lat, double lng) {
         LatLng latLng = new LatLng(lat, lng);
@@ -226,6 +245,7 @@ public class MainActivity extends BaseActivity
 
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (!isFinishing()) {
+                        Log.d(Utils.TAG, "teste: 1");
                         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                         ft.replace(R.id.rootFrame, new HomeFragment());
                         ft.commitAllowingStateLoss();

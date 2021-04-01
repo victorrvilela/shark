@@ -12,6 +12,9 @@ import androidx.annotation.Nullable;
 
 import com.example.shark.R;
 import com.example.shark.services.Mask;
+import com.example.shark.services.Utils;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,15 +58,44 @@ public class AccountFragment extends BaseFragment {
     }
 
     private void setInformation() {
-
-        displayName.setText(String.format("%s", "Usúario teste"));
-        tvPhone.setText(String.format("%s", Mask.addMask("16991817460", "(##) #####-####")));
-        tvEmail.setText(String.format("%s", "tester.shark@shark.com.br"));
-        address.setText(String.format("%s", "Avenida dos testes, 1913"));
-        plate.setText(String.format("%s", Mask.addMask("BJU3455", "###-####")));
-
+        loading.setVisibility(View.VISIBLE);
+        ParseQuery<ParseObject> parseUsers = ParseQuery.getQuery("Login");
+        parseUsers.fromLocalDatastore();
+        parseUsers.findInBackground((object, e) -> {
+            if (e == null) {
+                if (object.size() == 1) {
+                    ParseQuery<ParseObject> parseLogin = ParseQuery.getQuery("Users");
+                    parseLogin.fromLocalDatastore();
+                    parseLogin.whereEqualTo("email", object.get(0).getString("user"));
+                    parseLogin.getFirstInBackground((login, e1) -> {
+                        if (e1 == null) {
+                            displayName.setText(String.format("%s", login.getString("name")));
+                            tvPhone.setText(String.format("%s", Mask.addMask(login.getString("phone"), "(##) #####-####")));
+                            tvEmail.setText(String.format("%s", login.getString("email")));
+                            if (login.getString("address") != null) {
+                                if (!login.getString("address").equals("")) {
+                                    address.setText(String.format("%s", Utils.checkEmpty(login.getString("address"))));
+                                } else {
+                                    address.setText("Endereço não cadastrado");
+                                    address.setAlpha(0.5f);
+                                }
+                            } else {
+                                address.setText("Endereço não cadastrado");
+                                address.setAlpha(0.5f);
+                            }
+                            plate.setText(String.format("%s", Mask.addMask(login.getString("plate"), "###-####")));
+                            loading.setVisibility(View.GONE);
+                        }
+                    });
+                } else {
+                    displayName.setText(String.format("%s", "Usúario teste"));
+                    tvPhone.setText(String.format("%s", Mask.addMask("16991817460", "(##) #####-####")));
+                    tvEmail.setText(String.format("%s", "tester.shark@shark.com.br"));
+                    address.setText(String.format("%s", "Avenida dos testes, 1913"));
+                    plate.setText(String.format("%s", Mask.addMask("BJU3455", "###-####")));
+                    loading.setVisibility(View.GONE);
+                }
+            }
+        });
     }
-
-
-
 }

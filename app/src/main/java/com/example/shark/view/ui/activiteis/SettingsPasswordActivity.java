@@ -14,6 +14,8 @@ import com.example.shark.services.Utils;
 import com.example.shark.services.Validation;
 import com.example.shark.view.ui.BaseActivity;
 import com.google.android.material.textfield.TextInputEditText;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,7 +72,26 @@ public class SettingsPasswordActivity extends BaseActivity {
 
 
                 alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {
-                    alertDialog.dismiss();
+                    ParseQuery<ParseObject> parseUsers = ParseQuery.getQuery("Login");
+                    parseUsers.fromLocalDatastore();
+                    parseUsers.findInBackground((object, e) -> {
+                        if (e == null) {
+                            if (object.size() == 1) {
+                                    ParseQuery<ParseObject> parseLogin = ParseQuery.getQuery("Users");
+                                    parseLogin.fromLocalDatastore();
+                                    parseLogin.whereEqualTo("email", object.get(0).getString("user"));
+                                    parseLogin.getFirstInBackground((login, e1) -> {
+                                        if (e1 == null) {
+                                            login.put("password", newPassword.getText().toString());
+                                            alertDialog.dismiss();
+                                            loading.setVisibility(View.GONE);
+                                            finish();
+                                        }
+                                    });
+                            }
+                        }
+                    });
+
                 });
 
                 alertDialog.setOnCancelListener(

@@ -61,9 +61,9 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        //TODO retirar conta
-        username.setText("tester.shark@shark.com.br");
-        password.setText("shark123");
+//        //TODO retirar conta
+//        username.setText("diego@hotmail.com");
+//        password.setText("dev123");
     }
 
     @OnClick({R.id.btn_submit, R.id.btn_signup, R.id.btn_forgot})
@@ -84,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (e == null) {
                             if (objects.size() == 1) {
                                 loading.setVisibility(View.GONE);
-                                logged();
+                                logged(username.getText().toString());
                             } else {
                                 Toast.makeText(this, "Usuário ou senha incorreta!", Toast.LENGTH_LONG).show();
                                 loading.setVisibility(View.GONE);
@@ -124,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
+//        finish();
     }
 
     @Override
@@ -133,7 +133,10 @@ public class LoginActivity extends AppCompatActivity {
         enableButtons();
     }
 
-    private void logged() {
+    private void logged(String user) {
+        ParseObject objectDelivery = new ParseObject("Login");
+        objectDelivery.put("user", user);
+        objectDelivery.pinInBackground();
         getPackageManager().clearPackagePreferredActivities(getPackageName());
         Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
         mainActivity.addFlags(FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -143,6 +146,8 @@ public class LoginActivity extends AppCompatActivity {
         finish();
         startActivity(mainActivity);
     }
+
+
 
     private void populateLocalData() {
         ParseQuery<ParseObject> parsePedagios = ParseQuery.getQuery("Pedagios");

@@ -3,6 +3,7 @@ package com.example.shark.view.ui.activiteis;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -26,15 +27,20 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.example.shark.R;
 import com.example.shark.services.ImagePickerActivity;
+import com.example.shark.services.Mask;
 import com.example.shark.services.Utils;
 import com.example.shark.services.Validation;
 import com.example.shark.view.ui.BaseActivity;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 import com.santalu.maskedittext.MaskEditText;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -63,6 +69,8 @@ public class SettingsInfosActivity extends BaseActivity {
     Button btnSubmit;
     @BindView(R.id.SettingsInfos)
     CoordinatorLayout SettingsInfos;
+    @BindView(R.id.plate_account)
+    MaskEditText plate;
 
     private ParseFile file;
 
@@ -108,17 +116,81 @@ public class SettingsInfosActivity extends BaseActivity {
 
 
                 alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view2 -> {
-                    if (Validation.isValidUserName(this, name.getText().toString())) {
-                        if (Validation.isValidPhoneNumber(this, Objects.requireNonNull(phone.getRawText()))) {
-                            if (Validation.isValidEmail(this, username.getText().toString())) {
-                                if (Validation.isValidCPF(this, Objects.requireNonNull(cpf.getRawText()))) {
-                                    alertDialog.dismiss();
-                                    loading.setVisibility(View.VISIBLE);
-                                    Toast.makeText(getBaseContext(), "Dados atualizados com sucesso!", Toast.LENGTH_SHORT).show();
-                                    finish();
+                    if (Validation.isValidUserName(this, name.getText().toString()) &&
+                            Validation.isValidPhoneNumber(this, Objects.requireNonNull(phone.getRawText())) &&
+                            Validation.isValidEmail(this, username.getText().toString()) &&
+                            Validation.isValidPlate(this, Objects.requireNonNull((plate.getRawText()))) &&
+                            Validation.isValidCPF(this, Objects.requireNonNull(cpf.getRawText()))) {
+                        alertDialog.dismiss();
+                        loading.setVisibility(View.VISIBLE);
+                        ParseQuery<ParseObject> parseUsers = ParseQuery.getQuery("Login");
+                        parseUsers.fromLocalDatastore();
+                        parseUsers.findInBackground((object, e) -> {
+                            if (e == null) {
+                                if (object.size() == 1) {
+                                    if (username.getText().toString().equals(object.get(0).getString("user"))) {
+                                        ParseQuery<ParseObject> parseLogin = ParseQuery.getQuery("Users");
+                                        parseLogin.fromLocalDatastore();
+                                        parseLogin.whereEqualTo("email", object.get(0).getString("user"));
+                                        parseLogin.getFirstInBackground((login, e1) -> {
+                                            if (e1 == null) {
+                                                login.put("name", name.getText().toString());
+                                                login.put("plate", plate.getRawText());
+                                                login.put("address", address.getText().toString());
+                                                login.put("cellphone", Objects.requireNonNull(phone.getRawText()));
+                                                login.put("cpf", Objects.requireNonNull(cpf.getRawText()));
+                                                login.saveInBackground();
+                                                loading.setVisibility(View.GONE);
+                                                finish();
+                                            }
+                                        });
+
+                                    } else {
+                                        ParseQuery<ParseObject> parseEmail = ParseQuery.getQuery("Users");
+                                        parseEmail.whereEqualTo("email", username.getText().toString());
+                                        parseEmail.fromLocalDatastore();
+                                        parseEmail.findInBackground((objects, e5) -> {
+                                            if (e5 == null) {
+                                                if (objects.size() == 1) {
+                                                    loading.setVisibility(View.GONE);
+                                                    Toast.makeText(this, "Email já cadastrado!", Toast.LENGTH_LONG).show();
+                                                    username.setText(object.get(0).getString("user"));
+                                                } else {
+                                                    ParseQuery<ParseObject> parseLogin = ParseQuery.getQuery("Users");
+                                                    parseLogin.fromLocalDatastore();
+                                                    parseLogin.whereEqualTo("email", object.get(0).getString("user"));
+                                                    parseLogin.getFirstInBackground((login, e1) -> {
+                                                        if (e1 == null) {
+                                                            login.put("name", name.getText().toString());
+                                                            login.put("address", address.getText().toString());
+                                                            login.put("email", username.getText().toString());
+                                                            login.put("plate", plate.getRawText());
+                                                            login.put("cellphone", Objects.requireNonNull(phone.getRawText()));
+                                                            login.put("cpf", Objects.requireNonNull(cpf.getRawText()));
+
+                                                            login.saveInBackground();
+
+                                                            ParseQuery<ParseObject> query = ParseQuery.getQuery("Login");
+                                                            query.fromLocalDatastore().findInBackground(new FindCallback<ParseObject>() {
+                                                                @Override
+                                                                public void done(List<ParseObject> objects, com.parse.ParseException e) {
+                                                                    ParseObject.unpinAllInBackground(objects);
+                                                                    ParseObject objectDelivery = new ParseObject("Login");
+                                                                    objectDelivery.put("user", username.getText().toString());
+                                                                    objectDelivery.pinInBackground();
+                                                                    loading.setVisibility(View.GONE);
+                                                                    finish();
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        });
+                                    }
                                 }
                             }
-                        }
+                        });
                     }
                     alertDialog.dismiss();
                 });
@@ -127,11 +199,40 @@ public class SettingsInfosActivity extends BaseActivity {
     }
 
     public void setInformation() {
-        name.setText(String.format("%s", "Shark Tester"));
-        username.setText(String.format("%s", "shark.tester@shark.com.br"));
-        address.setText(String.format("%s", "Avenina Shark"));
-        phone.setText(String.format("%s", "31933399999"));
-        cpf.setText(String.format("%s", "98783376003"));
+        loading.setVisibility(View.VISIBLE);
+        ParseQuery<ParseObject> parseUsers = ParseQuery.getQuery("Login");
+        parseUsers.fromLocalDatastore();
+        parseUsers.findInBackground((object, e) -> {
+            if (e == null) {
+                if (object.size() == 1) {
+                    ParseQuery<ParseObject> parseLogin = ParseQuery.getQuery("Users");
+                    parseLogin.fromLocalDatastore();
+                    parseLogin.whereEqualTo("email", object.get(0).getString("user"));
+                    parseLogin.getFirstInBackground((login, e1) -> {
+                        if (e1 == null) {
+                            name.setText(String.format("%s", login.getString("name")));
+                            cpf.setText(String.format("%s", login.getString("cpf")));
+                            phone.setText(String.format("%s", Mask.addMask(login.getString("phone"), "(##) #####-####")));
+                            username.setText(String.format("%s", login.getString("email")));
+                            if (login.getString("address") != null) {
+                                if (!login.getString("address").equals("")) {
+                                    address.setText(String.format("%s", Utils.checkEmpty(login.getString("address"))));
+                                }
+                            }
+                            plate.setText(String.format("%s", Mask.addMask(login.getString("plate"), "###-####")));
+                            loading.setVisibility(View.GONE);
+                        }
+                    });
+                } else {
+                    name.setText(String.format("%s", "Usúario teste"));
+                    phone.setText(String.format("%s", Mask.addMask("16991817460", "(##) #####-####")));
+                    username.setText(String.format("%s", "tester.shark@shark.com.br"));
+                    address.setText(String.format("%s", "Avenida dos testes, 1913"));
+                    plate.setText(String.format("%s", Mask.addMask("BJU3455", "###-####")));
+                    loading.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     @Override

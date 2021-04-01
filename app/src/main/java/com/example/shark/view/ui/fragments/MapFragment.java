@@ -3,7 +3,7 @@ package com.example.shark.view.ui.fragments;
 import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresPermission;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.DialogFragment;
 
 import com.example.shark.R;
 import com.example.shark.services.Utils;
@@ -29,18 +30,19 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.maps.android.ui.IconGenerator;
+import com.google.maps.android.SphericalUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.shark.view.ui.fragments.BaseFragment.DIALOG_FRAGMENT;
 
 public class MapFragment extends HomeBaseFragment implements OnMapReadyCallback {
 
@@ -84,21 +86,30 @@ public class MapFragment extends HomeBaseFragment implements OnMapReadyCallback 
 
         mFusedLocationClient.getLastLocation()
                 .addOnSuccessListener(currentActivity, new OnSuccessListener<Location>() {
+                    @SuppressLint("PotentialBehaviorOverride")
                     @Override
                     public void onSuccess(Location location) {
 
                         if (location != null) {
                             userLocation = location;
-
                             centerCameraToPosition();
+                            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                                @Override
+                                public boolean onMarkerClick(Marker marker) {
+                                    showPopup(marker.getPosition());
+                                    return false;
+                                }
+                            });
+
+                            loadMarkers(mMap, new LatLng(userLocation.getLatitude(), userLocation.getLongitude()), 30, 60.00, 200000.00);
+
 
                         } else {
-
                             userLocation = null;
-
                         }
                     }
                 });
+
 
         if (mapView != null &&
                 mapView.findViewById(Integer.parseInt("1")) != null) {
@@ -112,7 +123,20 @@ public class MapFragment extends HomeBaseFragment implements OnMapReadyCallback 
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
             layoutParams.setMargins(0, 0, 30, 1100);
         }
+
+
     }
+
+    public void showPopup(LatLng destination) {
+        DialogFragment newFragment = MarkerDetailsFragment.newInstance();
+
+//        newFragment.setCancelable(false);
+        newFragment.setTargetFragment(this, DIALOG_FRAGMENT);
+        newFragment.show(currentActivity.getSupportFragmentManager(), "dialog");
+    }
+
+
+
 
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     private void onLocationPermissionGranted() {
@@ -124,6 +148,8 @@ public class MapFragment extends HomeBaseFragment implements OnMapReadyCallback 
         centerCameraToPosition();
     }
 
+
+
     public void centerCameraToPosition() {
         if (userLocation != null) {
             LatLng latLng = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
@@ -133,6 +159,38 @@ public class MapFragment extends HomeBaseFragment implements OnMapReadyCallback 
                     .build();
 
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+    }
+
+
+    public void addMarkers(LatLng destination) {
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(destination);
+        mMap.addMarker(markerOptions);
+
+
+    }
+
+    public void loadMarkers(GoogleMap map, LatLng center, int count,
+                             double minDistance, double maxDistance) {
+        double minLat = Double.MAX_VALUE;
+        double maxLat = Double.MIN_VALUE;
+        double minLon = Double.MAX_VALUE;
+        double maxLon = Double.MIN_VALUE;
+
+        for (int i = 0; i < count; ++i) {
+            double distance = minDistance + Math.random() * maxDistance;
+            double heading = Math.random() * 360 - 180;
+
+            LatLng position = SphericalUtil.computeOffset(center, distance, heading);
+
+            addMarkers(position);
+
+            minLat = Math.min(minLat, position.latitude);
+            minLon = Math.min(minLon, position.longitude);
+            maxLat = Math.max(maxLat, position.latitude);
+            maxLon = Math.max(maxLon, position.longitude);
         }
     }
 
@@ -147,38 +205,6 @@ public class MapFragment extends HomeBaseFragment implements OnMapReadyCallback 
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-    }
-
-    public void addMarkers(LatLng destination) {
-//        IconGenerator iconFactory = new IconGenerator(currentActivity);
-//        iconFactory.setBackground(getResources().getDrawable(R.drawable.ic_place));
-//        iconFactory.setTextAppearance(R.style.iconGenText);
-//        iconFactory.setContentPadding(4,0,4,0);
-        MarkerOptions options = new MarkerOptions();
-        options.position(destination);
-//        options.icon(BitmapDescriptorFactory.fromBitmap(iconFactory.makeIcon(label)));
-//        options.icon(BitmapDescriptorFactory.fromBitmap(drawableToBitmap(currentActivity.getResources().getDrawable(R.drawable.ic_place))));
-
-
-        IconGenerator TextMarkerGen = new IconGenerator(currentActivity);
-        Drawable marker;
-
-
-        marker = getResources().getDrawable(R.drawable.ic_place);
-        TextMarkerGen.setBackground(marker);
-
-
-        LayoutInflater myInflater = (LayoutInflater) currentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View activityView = myInflater.inflate(R.layout.cluster_view, null, false);
-
-        TextMarkerGen.setContentView(activityView);
-
-        BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(TextMarkerGen.makeIcon());
-        options.icon(icon);
-
-
-//        if (mMap != null)
-        mMap.addMarker(options);
     }
 
 
@@ -259,12 +285,6 @@ public class MapFragment extends HomeBaseFragment implements OnMapReadyCallback 
         return true;
     }
 
-    public LatLng getDestinationLatLong() {
 
-        if (destination != null)
-            return destination;
-        else
-            return null;
-    }
 
 }
