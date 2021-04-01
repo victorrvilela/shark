@@ -61,9 +61,9 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        //TODO retirar conta
-        username.setText("diego@hotmail.com");
-        password.setText("dev123");
+//        //TODO retirar conta
+//        username.setText("diego@hotmail.com");
+//        password.setText("dev123");
     }
 
     @OnClick({R.id.btn_submit, R.id.btn_signup, R.id.btn_forgot})
